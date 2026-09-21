@@ -1,30 +1,33 @@
-function quickplot(data, plot_title)
-% QUICKPLOT, plot a 2D spatial image or 2D Fourier spectrum
+function fig = quickplot(data, plot_title, save_path)
+% QUICKPLOT Plot a matrix and optionally save the resulting figure.
+%
+%   quickplot(DATA, TITLE)
+%   quickplot(DATA, TITLE, SAVE_PATH)
+%
+% DATA is plotted exactly as supplied. Any preprocessing, such as
+% log(1 + abs(fftshift(data))), belongs in the calling script.
 
-% Default title if not provided
 if nargin < 2
     plot_title = 'Quick Plot';
 end
-
-figure('Name', plot_title);
-
-% Check whether data is complex (Fourier spectrum) or real (spatial image)
-if ~isreal(data)
-    % Fourier spectrum: center origin with fftshift and use logarithmic scale
-    spectrum_log = log(1 + abs(fftshift(data)));
-    imagesc(spectrum_log);
-    colormap(gray); % or colormap(jet) for thermal view
-    colorbar;
-    xlabel('k_x [frequency index]');
-    ylabel('k_y [frequency index]');
-else
-    % Standard 2D spatial image
-    imagesc(data);
-    colormap(gray);
-    xlabel('x [pixels]');
-    ylabel('y [pixels]');
+if nargin < 3
+    save_path = '';
 end
 
-axis image; % preserve aspect ratio
-title(plot_title);
+fig = figure('Name', plot_title, 'Color', 'w');
+imagesc(data);
+axis image;
+colormap gray;
+colorbar;
+xlabel('x');
+ylabel('y');
+title(plot_title, 'Interpreter', 'none');
+
+if ~isempty(save_path)
+    output_folder = fileparts(save_path);
+    if ~isempty(output_folder) && ~isfolder(output_folder)
+        mkdir(output_folder);
+    end
+    exportgraphics(fig, save_path, 'Resolution', 200);
+end
 end
