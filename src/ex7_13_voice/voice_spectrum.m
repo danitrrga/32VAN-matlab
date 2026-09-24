@@ -1,5 +1,7 @@
 name = 'a_low.wav';
-[f, nu_s] = audioread(name);
+% recordings live in data/voice/, two folders up from this script
+data_dir = fullfile(fileparts(mfilename('fullpath')), '..', '..', 'data', 'voice');
+[f, nu_s] = audioread(fullfile(data_dir, name));
 f = f(:,1);
 N_s = length(f);
 F = fft(f);
