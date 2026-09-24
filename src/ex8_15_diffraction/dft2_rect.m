@@ -1,5 +1,4 @@
 clear;
-
 % physical size (x and y) of the calculation domain [m]
 D=2;
 
@@ -29,31 +28,28 @@ y=(0:N-1)*dy;
 % create and plot the rectangle f (left figure)
 f=zeros(N,N);
 f(Cx-Lxh:Cx+Lxh,Cy-Lyh:Cy+Lyh)=1;
-
 colormap('default');
-
 subplot(1,3,1), imagesc(x,y,abs(f));
 
 % now do the spectral stuff:
-
 % spatial wave number resolutions:
 dkx=2*pi/D;
 dky=2*pi/D;
+
 % wave number values after fftshift.
-kx_s= ???
-ky_s= ???
+kx_s = (-N/2:(N-1)/2) * dkx;
+ky_s = (-N/2:(N-1)/2) * dky;
 
 %note: multiply with the spatial periods (lengths) to obtain
-%      (an approximation of) the spectrum of the actual
-%      'unsampled' function.
+% (an approximation of) the spectrum of the actual
+% 'unsampled' function.
 F=dx*dy*fft2(f);
 Fsh=fftshift(F);
-
 subplot(1,3,2), imagesc(kx_s,ky_s,abs(Fsh));
 
 % analytical result:
 
-
-A= ???
+%transpose ky_s to obtain a grid when multiplying
+A = a * b * sinc(kx_s * b / (2*pi)) .* sinc(ky_s' * a / (2*pi));
 
 subplot(1,3,3), imagesc(kx_s,ky_s,abs(A));
