@@ -11,8 +11,9 @@ dy=D/N;
 
 % Position (center) and size of the rectangle (in index 'units')
 % (the width and height are 2*Lxh+1 and 2*Lyh+1, respectively.
-Cx=N/2;
-Cy=N/2;
+% N is odd, so the middle cell is (N+1)/2 (a whole number)
+Cx=(N+1)/2;
+Cy=(N+1)/2;
 Lxh=2;
 Lyh=4;
 
@@ -30,6 +31,10 @@ f=zeros(N,N);
 f(Cx-Lxh:Cx+Lxh,Cy-Lyh:Cy+Lyh)=1;
 colormap('default');
 subplot(1,3,1), imagesc(x,y,abs(f));
+title('Rectangle f(x,y)');
+xlabel('x [m]');
+ylabel('y [m]');
+grid on;
 
 % now do the spectral stuff:
 % spatial wave number resolutions:
@@ -37,8 +42,9 @@ dkx=2*pi/D;
 dky=2*pi/D;
 
 % wave number values after fftshift.
-kx_s = (-N/2:(N-1)/2) * dkx;
-ky_s = (-N/2:(N-1)/2) * dky;
+% N is odd, so they run symmetrically from -(N-1)/2 to (N-1)/2
+kx_s = (-(N-1)/2:(N-1)/2) * dkx;
+ky_s = (-(N-1)/2:(N-1)/2) * dky;
 
 %note: multiply with the spatial periods (lengths) to obtain
 % (an approximation of) the spectrum of the actual
@@ -46,6 +52,10 @@ ky_s = (-N/2:(N-1)/2) * dky;
 F=dx*dy*fft2(f);
 Fsh=fftshift(F);
 subplot(1,3,2), imagesc(kx_s,ky_s,abs(Fsh));
+title('Numerical spectrum |F| (DFT2)');
+xlabel('k_x [rad/m]');
+ylabel('k_y [rad/m]');
+grid on;
 
 % analytical result:
 
@@ -53,3 +63,7 @@ subplot(1,3,2), imagesc(kx_s,ky_s,abs(Fsh));
 A = a * b * sinc(kx_s * b / (2*pi)) .* sinc(ky_s' * a / (2*pi));
 
 subplot(1,3,3), imagesc(kx_s,ky_s,abs(A));
+title('Analytical spectrum |A|');
+xlabel('k_x [rad/m]');
+ylabel('k_y [rad/m]');
+grid on;
