@@ -1,0 +1,69 @@
+\section{Exercise 7.13 Human voice analysis}
+
+\begin{lstlisting}[caption={MATLAB script dft\_voice.m}, label={lst:dft_unknown_note}]
+
+name = 'a_low.wav';
+[f, nu_s] = audioread(name);
+f = f(:,1);
+N_s = length(f);
+F = fft(f);
+Power = abs(F).^2;
+v_k = (0:N_s-1)' * nu_s/N_s;   
+ 
+
+R = real(ifft(Power));              
+L = round(nu_s/500) : round(nu_s/60); 
+[~, i] = max(R(L+1));                
+nu_0 = nu_s / L(i);
+fprintf('Base frequency: %.1f Hz\n', nu_0)
+env = 10.^movmean(log10(Power), round(nu_0*N_s/nu_s));
+
+ 
+% Plot 
+low = v_k <= 3000;
+semilogy(v_k(low), Power(low))
+hold on
+semilogy(v_k(low), env(low), 'k', 'LineWidth', 1.5)
+hold off
+xlabel('Frequency (Hz)')
+ylabel('Power |F|^2 (arb. units)')
+title(['Power spectrum of ', name], 'Interpreter', 'none')
+legend('|F|^2', 'envelope')
+
+\end{lstlisting}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/a_low_spectrum.png}
+    \caption{A low power spectrum}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/u_high_spectrum.png}
+    \caption{U high power spectrum}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/u_low_spectrum.png}
+    \caption{U low power spectrum}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{Base frequencies for all voice recordings}
+    \label{tab:placeholder}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lc}
+        \toprule
+        A low   & 92.6 Hz \\
+        U low   & 92.6 Hz \\
+        U high  & 393.8 Hz \\
+        \bottomrule
+    \end{tabular}
+\end{table}
