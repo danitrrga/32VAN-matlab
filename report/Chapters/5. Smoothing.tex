@@ -8,7 +8,7 @@ Below, $k_x$ and $k_y$ denote the DFT indices along $x$ (columns) and $y$ (rows)
 
 \subsection*{The spectrum $FG$}
 
-The values of $F$ and $FG$ span many orders of magnitude: the term at $k_x = k_y = 0$ alone equals the sum of all grey values. Plotted on a linear colour scale, almost the whole spectrum would therefore be black. \Cref{fig:smooth-spectra} shows $\log(1 + |F|)$ and $\log(1 + |FG|)$ instead, after \texttt{fftshift}, so that $k_x = k_y = 0$ lies in the centre of the image, at pixel $(597, 448)$.
+The values of $F$ and $FG$ span many orders of magnitude: the term at $k_x = k_y = 0$ alone equals the sum of all grey values. Plotted on a linear colour scale, almost the whole spectrum would therefore be black. \Cref{fig:smooth-spectra} shows $\log(1 + |F|)$ and $\log(1 + |FG|)$ instead, after \texttt{fftshift}, so that $k_x = k_y = 0$ lies in the centre.
 
 \begin{figure}[H]
     \centering
@@ -23,7 +23,7 @@ The values of $F$ and $FG$ span many orders of magnitude: the term at $k_x = k_y
         \includegraphics[width=\linewidth]{Figures/smoothing_FG_log.png}
         \caption{$\log(1 + |FG|)$, smoothed with $L = 5$}
     \end{subfigure}
-    \caption{Spectra of the original and the smoothed picture after \texttt{fftshift}. The axes are DFT indices; the centre $(597, 448)$ corresponds to $k_x = k_y = 0$.}
+    \caption{Spectra of the original and the smoothed picture after \texttt{fftshift}. The axes give the DFT indices $k_x$ and $k_y$, in cycles per picture width and height.}
     \label{fig:smooth-spectra}
 \end{figure}
 
@@ -35,7 +35,7 @@ The values of $F$ and $FG$ span many orders of magnitude: the term at $k_x = k_y
 \]
 the discrete counterpart of the sinc function that is the Fourier transform of a rectangle. Its maximum is $G[0,0] = L^2 = 25$. It vanishes when $k_x L / N$ or $k_y L / M$ is a non-zero integer, i.e.\ for patterns that fit a whole number of times into the $L \times L$ block, so that they average out. For $L = 5$ this happens at $k_x = p\,N/L = 238.4\,p$ and $k_y = p\,M/L = 178.8\,p$ ($p = \pm 1, \pm 2, \dots$). Since these values are not integers, $|G|$ has deep minima rather than exact zeros: the first minimum along $x$ lies at $k_x = 238$, where $|G| = 0.045$, compared with $25$ at the centre. The first minimum along $y$ lies at $k_y = 179$.
 
-\textbf{Spectrum of $FG$.} Multiplying by $G$ produces the dark vertical lines in \cref{fig:smooth-spectra} at $k_x \approx \pm 238$ and $\pm 477$ (image columns $\approx 359, 835, 120, 1074$) and the dark horizontal lines at $k_y \approx \pm 179$ and $\pm 358$ (image rows $\approx 269, 627, 90, 806$). The centre is kept, while the higher frequencies are damped: $g$ acts as a low-pass filter. The raster peaks are still visible in $\log(1 + |FG|)$, but they are strongly reduced. At the strongest raster peaks $|G| / G[0,0] = 0.021$, so relative to the mean brightness they are suppressed by a factor of about $48$. On the logarithmic colour scale this is only a shift of $\ln(0.021) \approx -3.9$, which is why they do not disappear from the plot.
+\textbf{Spectrum of $FG$.} Multiplying by $G$ produces the dark vertical lines in \cref{fig:smooth-spectra} at $k_x \approx \pm 238$ and $\pm 477$ and the dark horizontal lines at $k_y \approx \pm 179$ and $\pm 358$. The centre is kept, while the higher frequencies are damped: $g$ acts as a low-pass filter. The raster peaks are still visible in $\log(1 + |FG|)$, but they are strongly reduced. At the strongest raster peaks $|G| / G[0,0] = 0.021$, so relative to the mean brightness they are suppressed by a factor of about $48$. On the logarithmic colour scale this is only a shift of $\ln(0.021) \approx -3.9$, which is why they do not disappear from the plot.
 
 \subsection*{Original and smoothed picture; relation to exercise 8.2}
 
