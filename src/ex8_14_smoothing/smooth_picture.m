@@ -62,7 +62,15 @@ ylabel('y [pixel]');
 colormap(gray);
 exportgraphics(gcf, fullfile(fig_dir, 'original_vs_smoothed.png'), 'Resolution', 200);
 
-direct_convolution = conv2(f, g, 'same');
+% direct (non-circular) convolution for comparison: convolve with the
+% L x L block itself and keep the first M x N values, so the square has the
+% same position as in the DFT result
+direct_full = conv2(f, ones(L));
+direct_convolution = direct_full(1:M, 1:N);
+
+% away from the top and left edges there is no wrap-around, so both must agree
+edge_free = abs(direct_convolution(L:end, L:end) - f_convolution(L:end, L:end));
+fprintf('Max difference DFT vs direct convolution (away from edges): %.3g\n', max(edge_free(:)));
 quickplot(direct_convolution, "Direct convolution", fullfile(fig_dir, "direct_convolution.png"));
 
 

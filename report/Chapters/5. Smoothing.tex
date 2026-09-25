@@ -61,6 +61,8 @@ This is the discrete version of exercise 8.2, where $g(x, y) = \frac{1}{ab} \ope
     \item \textbf{Edges.} The DFT treats the picture as one period of a pattern that repeats in both directions. Squares near the top and left edges therefore take pixels from the bottom and right edges of the picture, instead of the zeros or missing values of an ordinary convolution.
 \end{enumerate}
 
+As a check of the convolution property, the script also computes the ordinary (non-circular) convolution directly with \texttt{conv2(f, ones(L))}, keeping its first $M \times N$ values so that the square has the same position. Away from the top $L-1$ rows and the left $L-1$ columns, where no wrap-around occurs, both results agree to within $1.3 \cdot 10^{-11}$, i.e.\ up to rounding. Along the top row they differ by up to $5.1 \cdot 10^{3}$, which is the wrap-around of item 3.
+
 \subsection*{Influence of $L$}
 
 \Cref{fig:smooth-L} shows the result for $L = 1$, $10$ and $100$.
