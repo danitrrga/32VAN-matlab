@@ -30,10 +30,17 @@ Repository for Assignment A (Exercises 7.10–7.13 & 8.14–8.15).
    * Descriptive `title`
    * `xlabel` and `ylabel` with units
    * `grid on`
-4. **Save Figures Automatically**: Export plots directly into `figures/` using:
+4. **Save Figures Automatically**: Build paths from the script's own folder, so the script runs from any current folder, and export into `figures/<exercise>/`:
    ```matlab
-   exportgraphics(gcf, '../../figures/fig_name.png', 'Resolution', 300);
+   script_dir = fileparts(mfilename('fullpath'));
+   addpath(fullfile(script_dir, '..'));  % helpers in src/
+   fig_dir = fullfile(script_dir, '..', '..', 'figures', 'ex7_12_violin');
+   new_figure();
+   % ... plot ...
+   exportgraphics(gcf, fullfile(fig_dir, 'fig_name.png'), 'Resolution', 200);
    ```
+   Open figures with `new_figure` (or `quickplot` for images), not `figure`: since R2025a MATLAB can draw figures in a dark theme, which ends up in the exported file.
+5. **No `clear` in scripts**: it wipes the caller's workspace when a script is run from another one.
 
 ---
 

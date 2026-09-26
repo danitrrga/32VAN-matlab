@@ -32,7 +32,7 @@ if nargin < 7
     ydata = 1:size(data, 1);
 end
 
-fig = figure('Name', plot_title, 'Color', 'w');
+fig = new_figure('Name', plot_title);
 imagesc(xdata, ydata, data);
 axis image;
 colormap gray;

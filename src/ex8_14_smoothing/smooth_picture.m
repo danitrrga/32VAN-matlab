@@ -2,18 +2,15 @@
 % by convolving it with an L x L block of ones, using the convolution
 % property (8.21): f ** g = IDFT2( F .* G ).
 
-% clear; close all; clc;
-
 % ---- constants ----
 L = 5;                          % side of the smoothing square [pixel]
 L_values = [1, 5, 10, 20, 100]; % sides to compare at the end [pixel]
 
 % folders relative to this script, so it runs from any current folder
 script_dir = fileparts(mfilename('fullpath'));
+addpath(fullfile(script_dir, '..'));  % helpers in src/
 image_file = fullfile(script_dir, '..', '..', 'data', 'van_aartsen.jpg');
 fig_dir = fullfile(script_dir, '..', '..', 'figures', 'ex8_14_smoothing');
-
-colormap(gray);
 
 % Load image
 f_raw = imread(image_file);
@@ -40,11 +37,6 @@ F_log = log(1 + abs(F_centered));
 g = zeros(M, N);
 g(1:L, 1:L) = 1;
 
-
-% disp("Top-left section of g");
-% disp(g(1:20, 1:20));
-
-
 % Fourier spectra of g and pointwise product
 G = fft2(g, M, N);
 FG = F .* G;
@@ -62,7 +54,7 @@ quickplot(f, "Original image", fullfile(fig_dir, "original.png"), "x [pixel]", "
 quickplot(f_convolution, "Smoothed image", fullfile(fig_dir, "f_convolution.png"), "x [pixel]", "y [pixel]");
 
 % original and smoothed picture in one window
-figure('Color', 'w');
+new_figure();
 subplot(1, 2, 1);
 imagesc(f);
 axis image;
@@ -91,7 +83,6 @@ quickplot(direct_convolution, "Direct convolution", fullfile(fig_dir, "direct_co
 
 
 % Explore with different Ls
-
 for L = L_values
     g = zeros(M, N);
     g(1:L, 1:L) = 1;
