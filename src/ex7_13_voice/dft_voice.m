@@ -1,62 +1,49 @@
-% Exercise 7.13: power spectrum, base frequency and envelope (formants)
-% of three voice recordings.
+% Exercise 7.13: spectrum, base frequency and envelope of our recordings
 
-% ---- constants ----
-names = {'u_low', 'u_high', 'a_low'};  % recordings in data/voice/
-nu_min = 60;                    % lowest base frequency searched for [Hz]
-nu_max = 500;                   % highest base frequency searched for [Hz]
-nu_plot_max = 3000;             % upper limit of the plotted range [Hz]
+addpath('src')
+names = {'u_low', 'u_high', 'a_low'};
+nu_min = 60;        % range in which we look for the base frequency [Hz]
+nu_max = 500;
+nu_plot = 3000;     % plot the spectrum up to this frequency [Hz]
 
-% folders relative to this script, so it runs from any current folder
-script_dir = fileparts(mfilename('fullpath'));
-addpath(fullfile(script_dir, '..'));  % helpers in src/
-data_dir = fullfile(script_dir, '..', '..', 'data', 'voice');
-fig_dir = fullfile(script_dir, '..', '..', 'figures', 'ex7_13_voice');
-if ~isfolder(fig_dir)
-    mkdir(fig_dir);
-end
-
-for i_file = 1:numel(names)
-    name = names{i_file};
-
-    % read the recording; keep the first channel if it is stereo
-    [f, nu_s] = audioread(fullfile(data_dir, [name '.wav']));  % [-], [Hz]
+for i = 1:numel(names)
+    name = names{i};
+    [f, nu_s] = audioread(['data/voice/' name '.wav']);
     f = f(:, 1);
-    N_s = length(f);            % number of samples [-]
+    N_s = length(f);
 
-    % power spectrum and frequency of each bin nu_k = k*nu_s/N_s [Hz]
     F = fft(f);
     P = abs(F).^2;
     nu = (0:N_s-1)' * nu_s / N_s;
 
-    % rough base frequency: the IDFT of the power spectrum is the
-    % autocorrelation of f, which peaks at a lag of one period. Search the
-    % lags that correspond to nu_max down to nu_min [samples].
+    % ifft of the power spectrum is the autocorrelation, which peaks at a
+    % lag of one period: first guess for nu_0
     R = real(ifft(P));
     lags = round(nu_s/nu_max) : round(nu_s/nu_min);
-    [~, i_lag] = max(R(lags + 1));
-    nu_est = nu_s / lags(i_lag);
+    [~, j] = max(R(lags + 1));
+    nu_est = nu_s / lags(j);
 
-    % refine: the highest spectral peak within nu_est/2 of the estimate
+    % the lag is a whole number of samples, so refine with the strongest
+    % peak of the spectrum near the guess
     near = abs(nu - nu_est) < nu_est/2;
     nu_near = nu(near);
-    [~, i_peak] = max(P(near));
-    nu_0 = nu_near(i_peak);
-    fprintf('%s: base frequency %.1f Hz\n', name, nu_0);
+    [~, j] = max(P(near));
+    nu_0 = nu_near(j);
+    fprintf('%s: base frequency %.1f Hz\n', name, nu_0)
 
-    % envelope: moving average of log10(P) over one harmonic spacing nu_0
+    % envelope: average log10(P) over one harmonic spacing
     env = 10.^movmean(log10(P), round(nu_0 * N_s / nu_s));
 
-    low = nu <= nu_plot_max;
+    low = nu <= nu_plot;
     new_figure();
-    semilogy(nu(low), P(low));
-    hold on;
-    semilogy(nu(low), env(low), 'k', 'LineWidth', 1.5);
-    hold off;
-    title(['Power spectrum of ', name, '.wav'], 'Interpreter', 'none');
-    xlabel('Frequency \nu [Hz]');
-    ylabel('Power |F|^2 [arb. units]');
-    legend('|F|^2', 'envelope');
-    grid on;
-    exportgraphics(gcf, fullfile(fig_dir, [name '_spectrum.png']), 'Resolution', 200);
+    semilogy(nu(low), P(low))
+    hold on
+    semilogy(nu(low), env(low), 'k', 'LineWidth', 1.5)
+    hold off
+    grid on
+    title(name, 'Interpreter', 'none')
+    xlabel('Frequency [Hz]')
+    ylabel('|F|^2')
+    legend('|F|^2', 'envelope')
+    exportgraphics(gcf, ['figures/ex7_13_voice/' name '_spectrum.png'], 'Resolution', 200)
 end

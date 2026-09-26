@@ -1,63 +1,49 @@
-% Exercise 8.14: smoothing the newspaper picture of Jozias van Aartsen
-% by convolving it with an L x L block of ones, using the convolution
-% property (8.21): f ** g = IDFT2( F .* G ).
+% Exercise 8.14: smoothing the newspaper picture with an L x L block of
+% ones, using the convolution property (8.21)
 
-% ---- constants ----
-L = 5;                          % side of the smoothing square [pixel]
-L_values = [1, 10, 100];        % sides to compare at the end [pixel]
+addpath('src')
+L = 5;                      % side of the block [pixel]
+L_values = [1, 10, 100];    % other sizes to compare
 
-% folders relative to this script, so it runs from any current folder
-script_dir = fileparts(mfilename('fullpath'));
-addpath(fullfile(script_dir, '..'));  % helpers in src/
-image_file = fullfile(script_dir, '..', '..', 'data', 'van_aartsen.jpg');
-fig_dir = fullfile(script_dir, '..', '..', 'figures', 'ex8_14_smoothing');
-
-% grey value of each pixel (0 = black, 255 = white); double for fft2
-f = double(imread(image_file));
-[M, N] = size(f);               % M rows (y direction), N columns (x direction)
-
-% DFT indices after fftshift, k = 0 in the middle [cycles per picture]
-kx = (0:N-1) - floor(N/2);
+f = double(imread('data/van_aartsen.jpg'));
+[M, N] = size(f);
+kx = (0:N-1) - floor(N/2);  % frequency index after fftshift
 ky = (0:M-1) - floor(M/2);
 
-% g: same size as the picture, top-left L x L pixels equal to 1
 F = fft2(f);
 g = zeros(M, N);
 g(1:L, 1:L) = 1;
 FG = F .* fft2(g);
-f_smooth = real(ifft2(FG));     % (8.21)
+f_smooth = real(ifft2(FG));
 
-% log(1 + |F|) because |F| spans many orders of magnitude
-quickplot(log(1 + abs(fftshift(F))), "Fourier spectrum of the original image", ...
-    fullfile(fig_dir, "F_log.png"), "k_x [cycles per picture width]", "k_y [cycles per picture height]", kx, ky);
-quickplot(log(1 + abs(fftshift(FG))), "Fourier spectrum of the smoothed image", ...
-    fullfile(fig_dir, "FG_log.png"), "k_x [cycles per picture width]", "k_y [cycles per picture height]", kx, ky);
+% log because |F| covers many orders of magnitude
+quickplot(log(1 + abs(fftshift(F))), 'Spectrum of the original', ...
+    'figures/ex8_14_smoothing/F_log.png', 'k_x', 'k_y', kx, ky);
+quickplot(log(1 + abs(fftshift(FG))), 'Spectrum after smoothing', ...
+    'figures/ex8_14_smoothing/FG_log.png', 'k_x', 'k_y', kx, ky);
 
 new_figure();
-subplot(1, 2, 1);
-imagesc(f);
-axis image;
-title('Original image');
-xlabel('x [pixel]');
-ylabel('y [pixel]');
-subplot(1, 2, 2);
-imagesc(f_smooth);
-axis image;
-title(sprintf('Smoothed image, L = %d', L));
-xlabel('x [pixel]');
-ylabel('y [pixel]');
-colormap(gray);
-exportgraphics(gcf, fullfile(fig_dir, 'original_vs_smoothed.png'), 'Resolution', 200);
+subplot(1, 2, 1)
+imagesc(f)
+axis image
+title('Original')
+xlabel('x [pixel]'), ylabel('y [pixel]')
+subplot(1, 2, 2)
+imagesc(f_smooth)
+axis image
+title(sprintf('Smoothed, L = %d', L))
+xlabel('x [pixel]'), ylabel('y [pixel]')
+colormap(gray)
+exportgraphics(gcf, 'figures/ex8_14_smoothing/original_vs_smoothed.png', 'Resolution', 200)
 
-% check: direct (non-circular) convolution, first M x N values; away from
-% the top and left edges there is no wrap-around, so both must agree
+% compare with conv2, away from the top and left edges where the DFT wraps
 direct = conv2(f, ones(L));
-diff_edge_free = abs(direct(L:M, L:N) - f_smooth(L:M, L:N));
-fprintf('Max difference DFT vs direct convolution (away from edges): %.3g\n', max(diff_edge_free(:)));
+d = abs(direct(L:M, L:N) - f_smooth(L:M, L:N));
+fprintf('Max difference with conv2: %.3g\n', max(d(:)))
 
 for L_i = L_values
     g = zeros(M, N);
     g(1:L_i, 1:L_i) = 1;
-    quickplot(real(ifft2(F .* fft2(g))), sprintf("Smoothed image with L = %d", L_i), ...
-        fullfile(fig_dir, sprintf("f_convolution_L%d.png", L_i)), "x [pixel]", "y [pixel]");
+    quickplot(real(ifft2(F .* fft2(g))), sprintf('L = %d', L_i), ...
+        sprintf('figures/ex8_14_smoothing/f_convolution_L%d.png', L_i), 'x [pixel]', 'y [pixel]');
 end
