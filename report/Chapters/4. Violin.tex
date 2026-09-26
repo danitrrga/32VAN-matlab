@@ -1,3 +1,5 @@
+\section{Exercise 7.12: Analyzing a Note Played by a Violin} 
+
 % Code listing configuration for MATLAB
 \lstset{
     language=Matlab,
@@ -12,46 +14,16 @@
     captionpos=b
 }
 
-\section*{Exercise 7.12: Analyzing a Note Played by a Violin}
-
-\subsection*{Part 1: MATLAB Implementation (\texttt{dft\_unknown\_note.m})}
+\subsection{MATLAB Implementation}
 
 Below is the MATLAB script \texttt{dft\_unknown\_note.m} written to read the audio recording \texttt{unknown\_note.wav}, calculate its Discrete Fourier Transform (DFT), and plot the magnitude spectrum for the bottom half of the frequency range (from DC up to the Nyquist frequency):
 
-\begin{lstlisting}[caption={MATLAB script \texttt{dft\_unknown\_note.m} for spectral analysis of \texttt{unknown\_note.wav}}, label={lst:dft_unknown_note}]
-% 1. Read the audio file unknown_note.wav and retrieve sampling frequency
-[f, nu_s] = audioread('unknown_note.wav');
+\lstinputlisting[caption={MATLAB script \texttt{dft\_unknown\_note.m}}, label={lst:dft_unknown_note}]{Code/dft_unknown_note.m}
 
-% 2. Extract the first channel if stereo
-f = f(:, 1);
-N = length(f);
+\subsection{Results}
 
-% 3. Compute the Discrete Fourier Transform (DFT)
-F = fft(f);
-magF = abs(F);
+\textbf{Description of the Magnitude Spectrum}
 
-% 4. Create the frequency vector (DC to Nyquist)
-halfN = floor(N / 2) + 1;
-mag_half = magF(1:halfN);
-nu_half = (0:halfN - 1)' * (nu_s / N);
-
-% 5. Plot the bottom half of the spectrum as a function of nu
-figure;
-plot(nu_half, mag_half);
-xlabel('\nu (Hz)');
-ylabel('|F(\nu)|');
-title('Bottom half of the spectrum (DC to Nyquist)');
-grid on;
-
-% 6. Automatically extract the fundamental frequency
-[max_val, max_idx] = max(mag_half);
-base_freq = nu_half(max_idx);
-fprintf('Fundamental (base) frequency: %.2f Hz\n', base_freq);
-\end{lstlisting}
-
-\subsection*{Part 2: Description of the Spectrum and Note Identification}
-
-\subsubsection*{1. Description of the Magnitude Spectrum}
 The computed magnitude spectrum $|F(\nu)|$ for \texttt{unknown\_note.wav} exhibits the characteristic acoustic signature of a plucked or bowed string instrument:
 \begin{figure}[h]
     \centering
@@ -70,8 +42,13 @@ The computed magnitude spectrum $|F(\nu)|$ for \texttt{unknown\_note.wav} exhibi
     \item \textbf{Noise Level:} The spectral energy between the harmonic peaks is virtually zero, confirming a clean recording with minimal background noise.
 \end{itemize}
 
-\subsubsection*{2. Base Frequency and Musical Note Determination}
-From the peak analysis of the spectrum:
+
+
+\pagebreak
+
+
+\subsection{Results Analysis}
+From the peak analysis of the spectrum the Fundamental frequency: 457.35 Hz
 \begin{equation}
     \text{Base Frequency } (\nu_0) \approx 466.2\text{ Hz}
 \end{equation}

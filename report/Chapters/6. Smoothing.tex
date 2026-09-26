@@ -1,9 +1,12 @@
 \section{Exercise 8.14: Smoothing a newspaper picture}
 
-The script \texttt{smooth\_picture.m} reads \texttt{van\_aartsen.jpg} into a matrix $f$ of $M = 894$ rows by $N = 1192$ columns (grey values from $48$ to $255$) and computes its spectrum $F$ with \texttt{fft2}. The second matrix $g$ has the same size, with $g[m,n] = 1$ for $0 \le m, n \le L-1$ (the top-left $L \times L$ pixels) and $g[m,n] = 0$ elsewhere; initially $L = 5$. The spectra $F$, $G$ and their pointwise product $FG$ are computed, and the convolution follows from the convolution property (8.21):
+The script \textbf{\texttt{smooth\_picture.m}} reads \textbf{\texttt{van\_aartsen.jpg}} into a matrix $f$ of $M = 894$ rows by $N = 1192$ columns (grey values from $48$ to $255$) and computes its spectrum $F$ with \texttt{fft2}. The second matrix $g$ has the same size, with $g[m,n] = 1$ for $0 \le m, n \le L-1$ (the top-left $L \times L$ pixels) and $g[m,n] = 0$ elsewhere; initially $L = 5$. The spectra $F$, $G$ and their pointwise product $FG$ are computed, and the convolution follows from the convolution property (8.21):
 \[
 f ** g = \mathrm{IDFT2}\{F\,G\}.
 \]
+
+\lstinputlisting[caption={MATLAB script \texttt{smooth\_picture.m}}, label={lst:smooth_picture}]{Code/smooth_picture.m}
+
 Below, $k_x$ and $k_y$ denote the DFT indices along $x$ (columns) and $y$ (rows), counted from the centre after \texttt{fftshift}; index $k_x$ corresponds to a pattern that repeats $k_x$ times across the width of the picture, i.e.\ with a period of $N/k_x$ pixels.
 
 \subsection*{The spectrum $FG$}

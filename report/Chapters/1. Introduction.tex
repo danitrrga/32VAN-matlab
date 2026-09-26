@@ -1,72 +1,23 @@
-\section{Answering 7.11, can fix later} \label{section: introduction}
-The first value of the DFT array is $\nu$=0 Hz, with a frequency resolution of $\Delta\nu = \frac{1}{\Delta t}$, so a signal duration of 1s leads to a frequency resolution of $\Delta\nu = 1$ Hz.
-\\
-\\
-The $N_s$ samples of the DFT array are $\nu_k = k\Delta \nu = \frac{k\nu_s}{N_s}$, where k runs from 0 to $N_s-1$. For our defined $N_s = 2000$, these values run from 0 to 1999.
-\\
-\\
-Question 3
-\\
+\section{Introduction} 
+This report presents the solutions and findings for the \textbf{DFT/DFT2 Project} in Vector Analysis. The primary objective of this project is to explore the theoretical foundations and practical applications of the Discrete Fourier Transform (DFT) in 1D and 2D using MATLAB. The topics covered range from fundamental signal discretization and audio analysis (violin notes and human vocal formants) to 2D image processing (image smoothing) and physical wave optics (Fraunhofer diffraction patterns). 
 
-For
-\[
-f(t)=\cos(\omega_0 t),
-\]
-the continuous Fourier transform is
-\[
-F(\omega)=\pi\left[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\right].
-\]
+\subsection{Division of Work and Member Contributions} According to the project guidelines, the workload was distributed among the six members of the group to ensure a balanced division between 1D signal analysis, 2D transform implementations, and experimental recordings: 
 
-So, peaks are expected at $\nu = \pm440$ Hz.
+\begin{description}
+    
+\item[\textbf{Kilian Caulfield-Dreier}] 
+Implemented Exercise 7.10 (\textit{DFT Basics}) and assisted Daniel Tárraga with parameter testing for different box lengths $L$ in Exercise 8.14 (\textit{Image Smoothing}).
+\item[\textbf{Oliver Teulings}] 
+Responsible for Exercise 7.11 (\textit{The DFT of a Cosine}), focusing on analytical and numerical representations of sampled sinusoidal signals. 
+\item[\textbf{Hege Botnen:}] 
+Completed Exercise 7.12 (\textit{Analyzing a Note Played by a Violin}), including fundamental frequency extraction and musical note determination, as well as final LaTeX report assembly. 
+\item[\textbf{Alberts Sarkans:}] 
+Handled the audio recording setup for Exercise 7.13 (\textit{Experiments on the Human Voice}) and performed the spectral analysis for the \texttt{u\_low.wav} vocal sample.
+\item[\textbf{Daniel Tárraga:}] 
+Executed the comparative vocal formant analysis for \texttt{u\_high.wav} and \texttt{a\_low.wav} in Exercise 7.13, and developed the main 2D low-pass filter script for Exercise 8.14. 
+\item[\textbf{Daniel Madruga Coronado:}] 
+Developed Exercise 8.15 (\textit{The Fraunhofer Diffraction Pattern}) and performed the final quality verification of all 2D Fourier magnitude spectrum plots and axis labelings. 
 
-The centred DFT supports this, as peaks are seen at $\nu = -440$Hz and $\nu = +440$ Hz
+\end{description}
 
-In the unshifted DFT, the frequency component at -440 Hz appears at 
-appears at
-\[
-\nu_s-440
-=
-2000-440
-=
-1560\,\mathrm{Hz}.
-\]
-
-Therefore, the unshifted DFT has peaks at 440 Hz and 1560 Hz.
-\\
-\\
-Question 4
-\\
-For a real-valued function, the negative and positive parts of the DFT contain the same magnitude information. This is known as conjugate symmetry.
-\[
-F[N-k]=F^*[k],
-\]
-so
-\[
-|F[N-k]|=|F[k]|.
-\]
-Therefore, for a real signal, only plotting the lower-half or positive frequency  half of the spectrum is sufficient, as each part is essentially a mirror of eachother.
-\\
-\\
-Question 5
-\\
-The sampling frequency to $\nu_s = 2000$ Hz leads to a Nyquist frequency of $\nu_N = \nu_s/2 = 1000$ Hz. With a $v_0$ = 1800 Hz, 1800>1000. This will lead to aliasing, due to the periodic behaviour of the frequency spectrum. Therefore, shifting will lead to peaks appearing at 2000-1800=$ 200$ Hz. This means the sampled 1800 Hz cosine is indistinguishable from a 200Hz cosine, at the given sampling frequency.
-\\
-\\
-Question 6
-\\
-The relation between the signal duration and frequency resolution of the DFT is defined by
-\[
-\Delta t = 0.1\,\mathrm{s},
-\]
-For $\Delta t$=0.1s a frequency resolution of $\Delta\nu = 10$Hz is obtained. This means the spacing between frequency bins is wider, which results in a lower frequency resolution.
-For $\Delta t$=10s, the frequency resolution becomes $\Delta\nu=0.1$ Hz. This leads to less spacing between frequency bins, which results in a higher frequency resolution.
-\\
-\\
-
-Changing frequency resolution does not shift the peak, as it remains at approximately $v_0 = 440$Hz. However, increasing the signal duration results in a more finely sampled frequency spectrum, and the magnitude of the DFT peak also changes because the number of samples changes. Since MATLAB's \texttt{fft} is not normalised, the magnitude of each cosine peak is approximately
-
-\[
-\frac{N_s}{2}.
-\]
-
-Therefore, increasing $\Delta t$ also increases the magnitude of the peak because more samples are included in the DFT.
+\subsection{Statement of Originality} We hereby declare that the work presented in this report and the accompanying MATLAB scripts are our own original group effort, written and developed specifically for this course, and have not been copied or plagiarized from any external sources.

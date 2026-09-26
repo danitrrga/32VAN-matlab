@@ -17,26 +17,16 @@
 
 Below is the MATLAB script dft\_delta.m. This script performs a Discrete Fourier Transform (DFT) calculation on a simple array labeled f consisting of zeros with a length of 10 and the first value set to one. The script then computes the Inverse Discrete Fourier Transform (IDFT) on the the subsequent array labeled F and achieves the original array f. 
 
-\begin{lstlisting}[caption={MATLAB script \texttt{dft\_delta.m} for DFT basics}, label={lst:dft_delta}]
+\lstinputlisting[caption={MATLAB script \texttt{dft\_delta.m}}, label={lst:dft_delta}]{Code/dft_delta.m}
 
-% 1. Declare variable N and array f. Set f(1) to 1, all other entries 0.
-N = 10;
-f = zeros(1, N); f(1) = 1; 
 
-% 2. Calculate the DFT of f and print it.
-F = fft(f);
-disp('F =')
-disp(F)
+\subsection{Results}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figures//7.10 Figures/Exercise 7 10 DFT Basics.png}
+    \caption{Graphs}
+    \label{fig:placeholder}
+\end{figure}
 
-% 3. Calculate the IDFT of F and print it.
-F_inv = ifft(F);
-disp('F_inv=')
-disp(F_inv)
-
-% 4. Express every Omega_k terms of k and N. 
-k = 0:N-1;
-Omega_k = 2*pi*k / N;
-
-\end{lstlisting}
-
+\subsection{Results Analysis}
 The DFT of a delta-peak function is F[k] = 1, here we see that same result when performing a DFT on f.
